@@ -20,7 +20,7 @@ import Sidebar from "../../Sidebar";
 
 const SupervisorReports = () => {
   const [isOpen, setIsOpen] = useState(false);
-//   const [supervisor, setSupervisor] = useState("");
+  //   const [supervisor, setSupervisor] = useState("");
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -30,21 +30,40 @@ const SupervisorReports = () => {
 
   useEffect(() => {
     let user = JSON.parse(sessionStorage.getItem("user"));
-    let supervisor = user.supervisorID;
 
-    fetch("http://localhost:5000/reports/reports-to-me", {
-      method: "POST",
-      body: JSON.stringify({
-        supervisor,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setReports(data.data);
-      });
+    if (user.role === "IndustrySupervisor") {
+      let supervisor = user.industrySupervisorID;
+
+      fetch("http://localhost:5000/reports/reports-to-me", {
+        method: "POST",
+        body: JSON.stringify({
+          supervisor,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setReports(data.data);
+        });
+    }else{
+      let supervisor = user.supervisorID;
+
+      fetch("http://localhost:5000/reports/reports-to-me", {
+        method: "POST",
+        body: JSON.stringify({
+          supervisor,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setReports(data.data);
+        });
+    }
   }, []);
 
   return (
@@ -69,10 +88,12 @@ const SupervisorReports = () => {
                 return (
                   <tr key={report._id}>
                     <td>{report.weekNumber}</td>
-                    <td>{report.author}</td>
+                    <td>{report.authorName}</td>
                     <td>{report.status}</td>
                     <td>
-                      <View to={`/supervisor/pending-report/${report._id}`}>view</View>
+                      <View to={`/supervisor/pending-report/${report._id}`}>
+                        view
+                      </View>
                     </td>
                   </tr>
                 );

@@ -81,7 +81,7 @@ export default () => {
           <SendTo to="/supervisor/reports-to-me">
             <Card1>
               <GiBookshelf size={40} />
-              <CardH1>My Reports</CardH1>
+              <CardH1>Reports To Me</CardH1>
             </Card1>
           </SendTo>
 

@@ -18,13 +18,21 @@ const ReportAdder = () => {
   const [weekNumber, setWeekNumber] = useState("");
   const [supervisor, setSupervisor] = useState("");
   const [author, setAuthor] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [supervisorID, setSupervisorID]= useState("");
+  const [industrySupervisorID, setIndustrySupervisorID]= useState("");
 
   let navigate = useNavigate();
 
   useEffect(() => {
     let user = JSON.parse(sessionStorage.getItem("user"));
-    setSupervisor(user.supervisor);
+    setSupervisor(user.industrySupervisor);
     setAuthor(user.username);
+    setAuthorName(user.fullName)
+    setSupervisorID(user.supervisor)
+    setIndustrySupervisorID(user.industrySupervisor);
+
+
   }, []);
 
   const handleClick = (e) => {
@@ -35,6 +43,9 @@ const ReportAdder = () => {
       weekNumber,
       supervisor,
       author,
+      authorName,
+      supervisorID,
+      industrySupervisorID
     };
 
     axios
@@ -42,7 +53,7 @@ const ReportAdder = () => {
       .then((response) => {
         if (response.data) {
           toast.success("Uploaded");
-
+          console.log(response.data);
           setTimeout(() => {
             navigate("/dashboard");
           }, 2000);
@@ -82,6 +93,10 @@ const ReportAdder = () => {
           <option value={12}>Week 12</option>
         </FormSelect>
       </SelectContainer>
+
+    
+      <p>Don't forget to hit enter 😉...</p>
+      <br />
 
       <ReactQuill
         theme="snow"

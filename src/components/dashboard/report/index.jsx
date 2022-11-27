@@ -54,7 +54,7 @@ const TheReport = () => {
     <ReportContainer>
       <Toaster position="top-right" />
       <Week>Week {reportDetails.weekNumber}</Week>
-      <ReportBy>Report by {reportDetails.author}</ReportBy>
+      <ReportBy>Report by {reportDetails.authorName}</ReportBy>
 
       <TheReportCotainer>
         <ReactQuill theme="snow" value={report} readOnly={true} />

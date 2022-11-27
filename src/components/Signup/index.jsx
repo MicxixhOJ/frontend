@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "../assets/Loader.gif";
 import {
   Form,
   FormContent,
@@ -18,19 +19,55 @@ import {
 } from "./SignupElements";
 import Footer from "../Footer";
 
-const SignUp =  () => {
-
+const SignUp = () => {
   const [fullName, setFullName] = useState("");
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [supervisor, setSupervisor] = useState("");
   const [password, setPassword] = useState("");
+  const [industrySupe,  setIndustrySupe] = useState("");
   const [matricNumber, setMatricNumber] = useState("");
+  const [allSupervisors, setAllSupervisors] = useState([]);
+  const [industrySupervisors, setIndustrySupervisors] = useState([]);
+  const [loading, setLoading] = useState("");
 
-console.log(supervisor)
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("http://localhost:5000/supervisor/get-all-supervisors")
+      .then((response) => {
+        let demSupes = response.data;
 
-  
+        let theSupervisors = demSupes.map((supervisor) => ({
+          supervisorName: supervisor.fullName,
+          supervisorId: supervisor.supervisorID,
+          id: supervisor._id,
+        }));
 
+        setAllSupervisors(theSupervisors);
+
+        axios
+          .get("http://localhost:5000/industrySupervisor/get-all-supervisors")
+          .then((response) => {
+            let demInds = response.data;
+
+            let theInds = demInds.map((supervisor) => ({
+              supervisorName: supervisor.fullName,
+              supervisorId: supervisor.industrySupervisorID,
+              id: supervisor._id,
+            }));
+
+            setIndustrySupervisors(theInds);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   let userObject = {
     fullName,
@@ -39,6 +76,7 @@ console.log(supervisor)
     email,
     password,
     supervisor,
+    industrySupe
   };
 
   let navigate = useNavigate();
@@ -49,23 +87,19 @@ console.log(supervisor)
       .post("http://localhost:5000/student/register", userObject)
       .then((res) => {
         let user = res.data.student;
-        
+
         if (user) {
           toast.success("Signup Succesful");
           setTimeout(() => {
             navigate("/signin");
           }, 3000);
-        }
-        else{
-
+        } else {
           toast.error("Incorrect Details");
         }
-     
       })
       .catch((error) => {
-        console.log(error.response)
+        console.log(error.response);
         toast.error("User Already Exists");
-
 
         // window.location.reload();
       });
@@ -73,8 +107,6 @@ console.log(supervisor)
   return (
     <>
       <Container>
-        
-
         <FormWrap>
           <Icon to="/"> Uniben</Icon>
           <br />
@@ -114,23 +146,62 @@ console.log(supervisor)
                 onChange={(e) => setMatricNumber(e.target.value)}
                 placeholder="Matric Number"
               />
-             
-              <FormSelect
-                type="text"
-                name="supervisor"
-                required={true}
-                onChange={(e) => setSupervisor(e.target.value)}
-                placeholder="Supervisor"
-              >
-                <option disabled={true}>Choose Supervisor</option>
-                <option value={201} >Benson James</option>
-                <option value={202}>Adeleke Badmus</option>
-                <option value={203}>Adebayo King</option>
-               
-          
-             
-               
-              </FormSelect>
+
+              
+
+              {loading ? (
+                <img src={Loader} alt="loader" />
+              ) : (
+                <FormSelect
+                  type="text"
+                  name="supervisor"
+                  required={true}
+                  onChange={(e) => setSupervisor(e.target.value)}
+                  placeholder="Supervisor"
+                >
+                  <option disabled={true} selected>
+                    Choose Supervisor
+                  </option>
+
+                  {allSupervisors?.map((supervisor) => {
+                    return (
+                      <option
+                        key={supervisor.id}
+                        value={supervisor.supervisorId}
+                      >
+                        {supervisor.supervisorName}
+                      </option>
+                    );
+                  })}
+                </FormSelect>
+              )}
+
+              {loading ? (
+                <img src={Loader} alt="loader" />
+              ) : (
+                <FormSelect
+                  type="text"
+                  name="supervisor"
+                  required={true}
+                  onChange={(e) => setIndustrySupe(e.target.value)}
+                  placeholder="Supervisor"
+                >
+                  <option disabled={true} selected>
+                    Choose IndustrySupervisor
+                  </option>
+
+                  {industrySupervisors?.map((supervisor) => {
+                    return (
+                      <option
+                        key={supervisor.id}
+                        value={supervisor.supervisorId}
+                      >
+                        {supervisor.supervisorName}
+                      </option>
+                    );
+                  })}
+                </FormSelect>
+              )}
 
               <FormInput
                 type="password"

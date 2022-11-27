@@ -9,8 +9,8 @@ export const HomeContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 60px;
-  margin-bottom: 10px;
-  margin-top: 30px;
+  margin-bottom: 70px;
+  margin-top: 70px;
 
   @media screen and (max-width: 820px) {
     display: flex;
@@ -50,13 +50,11 @@ export const HomeSpan = styled.span`
   color: #9d04b1;
 `;
 
-
 export const HomeP = styled.p`
   color: #1a1a1a;
   font-size: 15px;
   font-weight: 200;
 `;
-
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -71,6 +69,7 @@ export const HomeButton = styled.button`
   color: #fff;
   border: none;
   cursor: pointer;
+  border-radius: 25px;
 `;
 export const HomeButtonWhite = styled.button`
   height: 40px;
@@ -80,6 +79,7 @@ export const HomeButtonWhite = styled.button`
   border: 1px solid #9d04b1;
   cursor: pointer;
   margin-left: 10px;
+  border-radius: 25px;
 `;
 
 export const View = styled(Link)`
@@ -87,10 +87,10 @@ export const View = styled(Link)`
   text-decoration: none;
   font-size: 15px;
   color: #fff;
-`
+`;
 export const ViewTwo = styled(Link)`
   color: #9d04b1;
   text-decoration: none;
   font-size: 15px;
   /* color: #fff; */
-`
+`;

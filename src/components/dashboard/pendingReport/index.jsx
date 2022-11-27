@@ -29,9 +29,14 @@ const ThePendingReport = () => {
   const [report, setReport] = useState("");
   const [status, setStatus] = useState("");
   const [reportDetails, setReportDetails] = useState("");
+  const [nextApprover, setNextApprover] = useState("");
   const [role, setRole] = useState("");
 
+
   let navigate = useNavigate();
+  let user = JSON.parse(sessionStorage.getItem("user"));
+
+
   useEffect(() => {
     let user = JSON.parse(sessionStorage.getItem("user"));
     setRole(user.role);
@@ -48,6 +53,7 @@ const ThePendingReport = () => {
       .then((response) => response.json())
       .then((data) => {
         let theReport = data.data;
+        
         setReportDetails(theReport);
         setReport(theReport.report);
       });
@@ -55,13 +61,39 @@ const ThePendingReport = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    // console.log("yya");
+
+    if(user.role === 'IndustrySupervisor'){
+      if(status === 'Approved'){
+          
+    let theObj = {
+      id,
+      status: "Pending",
+      nextApprover: reportDetails.supervisorID
+    };
+
+    // console.log(theObj);
+    axios
+      .post("http://localhost:5000/reports/process-report", theObj)
+      .then((response) => {
+        console.log('APRR',response);
+        toast.success("Processed");
+
+        setTimeout(() => {
+          navigate("/supervisor/pending-reports");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something Went Wrong");
+      });
+      }else{
+          
     let theObj = {
       id,
       status,
     };
 
-    console.log(theObj);
+    // console.log(theObj);
     axios
       .post("http://localhost:5000/reports/process-report", theObj)
       .then((response) => {
@@ -76,13 +108,38 @@ const ThePendingReport = () => {
         console.log(error);
         toast.error("Something Went Wrong");
       });
+      }
+    }else{
+        
+    let theObj = {
+      id,
+      status,
+    };
+
+    // console.log(theObj);
+    axios
+      .post("http://localhost:5000/reports/process-report", theObj)
+      .then((response) => {
+        console.log(response);
+        toast.success("Processed");
+
+        setTimeout(() => {
+          navigate("/supervisor/pending-reports");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something Went Wrong");
+      });
+    }
+  
   };
 
   return (
     <ReportContainer>
       <Toaster position="top-right" />
       <Week>Week {reportDetails.weekNumber}</Week>
-      <ReportBy>Report by {reportDetails.author}</ReportBy>
+      <ReportBy>Report by {reportDetails.authorName}</ReportBy>
 
       <TheReportCotainer>
         <ReactQuill theme="snow" value={report} readOnly={true} />
@@ -103,7 +160,7 @@ const ThePendingReport = () => {
                 onChange={(e) => setStatus(e.target.value)}
                 placeholder="Choice"
               >
-                <option>Decision</option>
+                <option disabled selected>Decision</option>
                 <option value="Approved">Approve</option>
                 <option value="Rejected">Reject</option>
               </FormSelect>
@@ -112,7 +169,7 @@ const ThePendingReport = () => {
             <ApproveButton onClick={handleClick}>Process</ApproveButton>
             {/* <RejectButton>Reject</RejectButton> */}
             <BackButton>
-              <View to="/supervisor/pending-reports">Back</View>{" "}
+              <View to="/supervisor/reports-to-me">Back</View>{" "}
             </BackButton>
           </ButtonContainer>
         )}

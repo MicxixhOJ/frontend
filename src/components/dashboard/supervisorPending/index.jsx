@@ -62,7 +62,7 @@ const PendingOnMe = () => {
               return (
                 <tr key={report._id}>
                   <td>{report.weekNumber}</td>
-                  <td>{report.author}</td>
+                  <td>{report.authorName}</td>
                   <td>{report.status}</td>
                   <td><View to={`/supervisor/pending-report/${report._id}`}>view</View></td>
  

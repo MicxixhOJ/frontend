@@ -45,7 +45,7 @@ export const ApproveButton = styled.button`
   color: #fff;
   border: none;
   cursor: pointer;
-
+  border-radius: 4px;
   &:hover {
     transition: all 0.2s ease-in-out;
     background: #5454d8;
@@ -81,7 +81,7 @@ export const BackButton = styled.button`
   color: #fff;
   border: none;
   cursor: pointer;
-
+  border-radius: 4px;
   &:hover {
     transition: all 0.2s ease-in-out;
     background: #5d0569;

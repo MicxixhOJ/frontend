@@ -19,7 +19,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SignIn = () => {
+const IndustrySignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -33,7 +33,7 @@ const SignIn = () => {
     e.preventDefault();
 
     axios
-      .post("http://localhost:5000/supervisor/login", userObject)
+      .post("http://localhost:5000/industrySupervisor/login", userObject)
       .then((res) => {
         let user = res.data.supervisor;
         if (user) {
@@ -64,7 +64,7 @@ const SignIn = () => {
       
           <FormContent>
             <Form action="#" onSubmit={handleSubmit}>
-              <FormH1> Sign In As Supervisor</FormH1>
+              <FormH1> Sign In As Industry Supervisor</FormH1>
               {/* <FormLabel htmlFor="for">Username</FormLabel> */}
               <FormInput
                 type="email"
@@ -93,4 +93,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default IndustrySignIn;
