@@ -16,30 +16,32 @@ import {
   Text,
   Accent,
   FormSelect,
-} from "./SignupElements";
+} from "./UpdateElements";
 import Footer from "../Footer";
 
-const SignUp = () => {
-  const [fullName, setFullName] = useState("");
-  const [username, setUserName] = useState("");
-  const [email, setEmail] = useState("");
+const UpdateProfile = () => {
+  const [id, setId] = useState("");
   const [supervisor, setSupervisor] = useState("");
-  const [supervisorName, setSupervisorName] = useState("");
-  const [industrySupervisorName, setIndustrySupervisorName] = useState("");
-  const [password, setPassword] = useState("");
-  const [industrySupe,  setIndustrySupe] = useState("");
-  const [matricNumber, setMatricNumber] = useState("");
+  const [industrySupervisor, setIndustrySupervisor] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [year, setYear] = useState("");
+  const [phone, setPhone] = useState("");
   const [allSupervisors, setAllSupervisors] = useState([]);
   const [industrySupervisors, setIndustrySupervisors] = useState([]);
   const [loading, setLoading] = useState("");
 
+  
+  let user = JSON.parse(sessionStorage.getItem("user"));
 
+  
   useEffect(() => {
     setLoading(true);
     axios
       .get("http://localhost:5000/supervisor/get-all-supervisors")
       .then((response) => {
         let demSupes = response.data;
+
+
 
         let theSupervisors = demSupes.map((supervisor) => ({
           supervisorName: supervisor.fullName,
@@ -48,7 +50,9 @@ const SignUp = () => {
         }));
 
         setAllSupervisors(theSupervisors);
+        setId(user._id)
 
+        console.log(user._id)
         axios
           .get("http://localhost:5000/industrySupervisor/get-all-supervisors")
           .then((response) => {
@@ -73,39 +77,35 @@ const SignUp = () => {
   }, []);
 
   let userObject = {
-    fullName,
-    username,
-    matricNumber,
-    email,
-    password,
+    year,
+    id,
+    phone,
     supervisor,
-    industrySupe, 
-    supervisorName,
-    industrySupervisorName
+    industry,
+    industrySupervisor,
   };
 
   let navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-
+    // console.log(userObject)
     axios
-      .post("http://localhost:5000/student/register", userObject)
+      .post("http://localhost:5000/student/update-account", userObject)
       .then((res) => {
         let user = res.data.student;
 
         if (user) {
-          toast.success("Signup Succesful");
+          toast.success("Update Succesful");
           setTimeout(() => {
-            navigate("/signin");
+            navigate("/dashboard");
           }, 3000);
         } else {
-          toast.error("Incorrect Details");
+          toast.error("Try Again");
         }
       })
       .catch((error) => {
         console.log(error.response);
-        toast.error("User Already Exists");
+        toast.error("Try Again");
 
         // window.location.reload();
       });
@@ -120,41 +120,63 @@ const SignUp = () => {
           <Toaster position="top-right" />
           <FormContent>
             <Form action="#" onSubmit={handleSubmit}>
-              <FormH1> Create your account</FormH1>
+              <FormH1> Update Your Account</FormH1>
               {/* <FormLabel htmlFor="for">Full Name</FormLabel> */}
               <FormInput
                 type="text"
-                name="fullName"
+                name="phone"
                 required={true}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Full Name"
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone Number"
               />
               {/* <FormLabel htmlFor="for">Username</FormLabel> */}
               <FormInput
-                type="text"
-                name="username"
+                type="number"
+                name="year"
                 required={true}
-                onChange={(e) => setUserName(e.target.value)}
-                placeholder="Username"
+                onChange={(e) => setYear(e.target.value)}
+                placeholder="Year"
               />
 
-              <FormInput
-                type="email"
+              {/* <FormInput
+                type="text"
                 name="email"
                 required={true}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-              />
-              <FormInput
+              /> */}
+
+              <FormSelect
                 type="text"
-                name="matricNumber"
+                name="supervisor"
                 required={true}
-                onChange={(e) => setMatricNumber(e.target.value)}
-                placeholder="Matric Number"
-              />
+                onChange={(e) => setIndustry(e.target.value)}
+              >
+                <option disabled={true} selected>
+                  Choose Industry
+                </option>
 
-              
+                <option 
+                  key={1}
+                  value="Medicine"
+                >
+                  Medicine
+                </option>
+                <option 
+                  key={2}
+                  value="Banking"
+                >
+                  Banking & Finance
+                </option>
+                <option 
+                  key={3}
+                  value="Agriculture"
+                >
+                  Agriculture
+                </option>
 
+              </FormSelect>
+             
               {loading ? (
                 <img src={Loader} alt="loader" />
               ) : (
@@ -173,7 +195,7 @@ const SignUp = () => {
                     return (
                       <option
                         key={supervisor.id}
-                        value={supervisor.supervisorId}
+                        value={supervisor.supervisorName}
                       >
                         {supervisor.supervisorName}
                       </option>
@@ -189,7 +211,7 @@ const SignUp = () => {
                   type="text"
                   name="supervisor"
                   required={true}
-                  onChange={(e) => setIndustrySupe(e.target.value)}
+                  onChange={(e) => setIndustrySupervisor(e.target.value)}
                   placeholder="Supervisor"
                 >
                   <option disabled={true} selected>
@@ -200,7 +222,7 @@ const SignUp = () => {
                     return (
                       <option
                         key={supervisor.id}
-                        value={supervisor.supervisorId}
+                        value={supervisor.supervisorName}
                       >
                         {supervisor.supervisorName}
                       </option>
@@ -209,16 +231,16 @@ const SignUp = () => {
                 </FormSelect>
               )}
 
-              <FormInput
+              {/* <FormInput
                 type="password"
                 name="password"
                 required={true}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-              />
+              /> */}
               <FormButton type="submit">Continue</FormButton>
               <Text>
-                Have an account? <Accent to="/signin">Login</Accent>{" "}
+                Go to Dashboard? <Accent to="/dashboard">Dashboard</Accent>{" "}
               </Text>
             </Form>
           </FormContent>
@@ -229,4 +251,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default UpdateProfile;

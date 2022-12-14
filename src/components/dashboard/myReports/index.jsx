@@ -69,7 +69,7 @@ const Myreports = () => {
               return (
                 <tr key={report._id}>
                   <td>{report.weekNumber}</td>
-                  <td>{report.supervisor}</td>
+                  <td>{report.supervisorName}</td>
                   <td>{report.status}</td>
                   <td><View to={`/dashboard/report/${report._id}`}>view</View></td>
 

@@ -114,6 +114,10 @@ export const Card4 = styled.div`
   }
 `;
 
+export const Pee = styled.p`
+  color: #dcb6e1;
+  font-size: 8px;
+`;
 export const CardH1 = styled.h1`
   margin-top: 20px;
   font-size: 25px;

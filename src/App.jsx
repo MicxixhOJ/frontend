@@ -14,6 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Pending from "./pages/dashboard/PendingOnMe";
 import PendingReport from "./pages/dashboard/pendingReport";
 import SupervisorReports from "./components/dashboard/supervisorReports";
+import UpdateAccount from "./pages/updateAccount";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
             element={<PendingReport />}
             exact={true}
           />
-
+          <Route path="/update-account" element={<UpdateAccount />} exact={true} />
           <Route path="/dashboard" element={<Dashboard />} exact={true} />
           <Route path="/dashboard/add-report" element={<AddReport />} exact={true} />
           <Route path="/dashboard/my-reports" element={<MyReports />} exact={true} />

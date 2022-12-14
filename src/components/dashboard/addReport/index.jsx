@@ -21,6 +21,9 @@ const ReportAdder = () => {
   const [authorName, setAuthorName] = useState("");
   const [supervisorID, setSupervisorID]= useState("");
   const [industrySupervisorID, setIndustrySupervisorID]= useState("");
+  const [supervisorName, setSupervisorName]= useState("");
+  const [industrySupervisorName, setIndustrySupervisorName]= useState("");
+
 
   let navigate = useNavigate();
 
@@ -31,6 +34,8 @@ const ReportAdder = () => {
     setAuthorName(user.fullName)
     setSupervisorID(user.supervisor)
     setIndustrySupervisorID(user.industrySupervisor);
+    setSupervisorName(user.supervisorName)
+    setIndustrySupervisorName(user.industrySupervisorName)
 
 
   }, []);
@@ -45,10 +50,15 @@ const ReportAdder = () => {
       author,
       authorName,
       supervisorID,
-      industrySupervisorID
+      industrySupervisorID,
+      supervisorName,
+      industrySupervisorName,
     };
 
-    axios
+    if(report == '' || weekNumber == ''){
+      toast.error('Fill All Fields')
+    }else{
+      axios
       .post("http://localhost:5000/reports/add-report", theObj)
       .then((response) => {
         if (response.data) {
@@ -64,6 +74,9 @@ const ReportAdder = () => {
       .catch((error) => {
         toast.error("Something went wrong");
       });
+    }
+
+    
   };
 
   return (
@@ -78,7 +91,7 @@ const ReportAdder = () => {
           onChange={(e) => setWeekNumber(e.target.value)}
           placeholder="Week"
         >
-          <option>Choose Week</option>
+          <option disabled selected>Choose Week</option>
           <option value={1}>Week 1</option>
           <option value={2}>Week 2</option>
           <option value={3}>Week 3</option>

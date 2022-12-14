@@ -9,21 +9,30 @@ import {
   CardH1,
   SendTo,
   DashboardContainer,
+  Pee
 } from "./cardsElement";
 import { GiBookshelf } from "react-icons/gi";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaUsers } from "react-icons/fa";
 import { SiBookstack } from "react-icons/si";
 import { MdPendingActions } from "react-icons/md";
+import {BiEraser} from "react-icons/bi";
+import axios from "axios";
 
 export default () => {
   const [role, setRole] = useState("");
   const [totalReports, setTotalReports] = useState("");
   const [totalStudents, setTotalStudents] = useState("");
+  let user = JSON.parse(sessionStorage.getItem("user"));
 
   useEffect(() => {
     let user = JSON.parse(sessionStorage.getItem("user"));
-    setRole(user.role);
+    setRole(user.role)
+
+
+ 
+
+
   }, []);
 
   useEffect(() => {
@@ -53,6 +62,25 @@ export default () => {
         setTotalStudents(data.data);
       });
   }, []);
+
+
+  useEffect(() => {
+       let theStudent = {
+      id: user._id
+    }
+    axios.post('http://localhost:5000/student/get-student', theStudent ).then((response) =>{
+      
+      let user = response.data.data
+      delete user.password
+      sessionStorage.setItem("user", JSON.stringify(user));
+      // console.log(user)
+      
+    }).catch((error) =>{
+      console.log(error)
+    })
+  }, []);
+
+
 
   const toggleHome = () => {
     scroll.scrollToTop();
@@ -94,7 +122,37 @@ export default () => {
         </CardsContainer>
       )}
 
+{role === "Student" ? (
+
+
       <CardsContainer>
+        <Card3>
+          <FaUsers size={40} />
+          <CardH1>Total Students</CardH1>
+          {totalStudents}
+        </Card3>
+
+        <SendTo to="/update-account">
+        <Card4>
+          <BiEraser size={40} />
+          <CardH1>Update Profile</CardH1>
+          <Pee> {totalReports} </Pee>
+        </Card4>
+        </SendTo>
+      </CardsContainer>
+      
+      
+      
+      ) 
+      
+      
+      :
+      
+      
+      
+      
+      (
+        <CardsContainer>
         <Card3>
           <FaUsers size={40} />
           <CardH1>Total Students</CardH1>
@@ -107,6 +165,8 @@ export default () => {
           {totalReports}
         </Card4>
       </CardsContainer>
+      )}
+       
     </DashboardContainer>
   );
 };
