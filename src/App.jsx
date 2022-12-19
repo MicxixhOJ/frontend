@@ -15,6 +15,7 @@ import Pending from "./pages/dashboard/PendingOnMe";
 import PendingReport from "./pages/dashboard/pendingReport";
 import SupervisorReports from "./components/dashboard/supervisorReports";
 import UpdateAccount from "./pages/updateAccount";
+import Oopsies from "./pages/404Page";
 
 function App() {
   return (
@@ -24,10 +25,14 @@ function App() {
         <Route path="/signin" element={<Login />} exact={true} />
         <Route path="/signup" element={<Signup />} exact={true} />
         <Route path="/supervisor/signin" element={<SLogin />} exact={true} />
-        <Route path="/industrySupervisor/signin" element={<ISlogin />}  exact={true} />
-        
+        <Route
+          path="/industrySupervisor/signin"
+          element={<ISlogin />}
+          exact={true}
+        />
+        <Route path="*" element={<Oopsies />} exact />
 
-        <Route element={<ProtectedRoute/>}>
+        <Route element={<ProtectedRoute />}>
           <Route
             path="/supervisor/reports-to-me"
             element={<SupervisorReports />}
@@ -43,11 +48,27 @@ function App() {
             element={<PendingReport />}
             exact={true}
           />
-          <Route path="/update-account" element={<UpdateAccount />} exact={true} />
+          <Route
+            path="/update-account"
+            element={<UpdateAccount />}
+            exact={true}
+          />
           <Route path="/dashboard" element={<Dashboard />} exact={true} />
-          <Route path="/dashboard/add-report" element={<AddReport />} exact={true} />
-          <Route path="/dashboard/my-reports" element={<MyReports />} exact={true} />
-          <Route path="/dashboard/report/:id" element={<Report />} exact={true} />
+          <Route
+            path="/dashboard/add-report"
+            element={<AddReport />}
+            exact={true}
+          />
+          <Route
+            path="/dashboard/my-reports"
+            element={<MyReports />}
+            exact={true}
+          />
+          <Route
+            path="/dashboard/report/:id"
+            element={<Report />}
+            exact={true}
+          />
         </Route>
 
         {/* <Route path="/dashboard" element={isauthenticated ? <Dashboard /> : <SigninPage />} exact /> */}
